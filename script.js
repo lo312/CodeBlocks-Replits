@@ -1,336 +1,188 @@
 /* ______________________ PART 1 ______________________
-Array Operations
+Mixins
 */
 
 /*
 1.1
-We want to add a final ingredient to our smoothies, which should show up at the end of the list, but we're accidentally adding it to the beginning!
-Can you fix it?
+We have a mobility mixin below that includes a function for running, but we want one for jumping too!
+- Within the mixin, set a jump function on the obj parameter. The function should return "higher!"
+- Create an instance of Dog named coolDog with the name param of your choice
+- Apple the mixin to the coolDog
 
 Testing:
-- input: (['yogurt', 'strawberries', 'bananas'], 'peanut butter') => expected output: ["yogurt", "strawberries", "bananas", "peanut butter"]
+- assert that (coolDog.run()) evaluates to ('go go go!')
+- assert that (coolDog.jump()) evaluates to ('higher!')
 */
 
-let ingredients = (['yogurt', 'strawberries', 'bananas'], 'peanut butter')
-function addLastIngredient(ingredients, finalIngredient) {
-  ingredients.push(finalIngredient);
-  return ingredients;
+function Dog(name) {
+  this.name = name;
 }
 
-console.log(addLastIngredient(['yogurt', 'strawberries', 'bananas'], 'peanut butter'));
+let mobilityMixin = function (obj) {
+  obj.run = function () {
+    return 'go go go!';
+  }
+  obj.jump = function () {
+    return 'higher!';
+  }
+};
+
+let coolDog = new Dog('Howdy Doody');
+mobilityMixin(coolDog);
+
+console.log(coolDog.run());
+console.log(coolDog.jump());
 
 trackProgress('1.1');
 
+
 /*
 1.2
-Yuck, some bad ingredients made it into our smoothies! Can you remove them?
-
-Write a function called removeBadIngredients that takes in an array of ingredients and an ingredientToRemove, and returns an ingredient list without the bad item.
+Mixins aren't just for instances of objects! You can apply them to prototypes too!
+- Create a Sloth constructor (no params needed)
+- Following the guidance in this article (https://javascript.info/mixins), create a mixin called sleepMixin that has two functions on it (see tests below for expected behavior) and assign the mixin to the Sloth prototype
+- Create two Sloth instances (coolSloth, coolerSloth) and invoke the mixin functions
 
 Testing:
-- input: (['peaches', 'orange juice', 'tuna fish', 'banana'], 'tuna fish') => expected output: ["peaches", "orange juice", "banana"]
+- assert that (coolSloth.sleep()) evaluates to ('zzzzzz')
+- assert that (coolSloth.countSheep()) evaluates to ('1, 2, 3...')
+- assert that (coolerSloth.sleep()) evaluates to ('zzzzzz')
+- assert that (coolerSloth.countSheep()) evaluates to ('1, 2, 3...')
 */
 
+function Sloth() {};
 
-
-function removeBadIngredients(ingredients, ingredientToRemove) {
-  const badIndex = ingredients.indexOf(ingredientToRemove);
-  if (badIndex >= 0) {
-    ingredients.splice(badIndex, 1);
-      return ingredients;
-
+let sleepMixin = {
+  sleep() {
+    return "zzzzzz"
+  },
+  countSheep() {
+    return "1,2,3..."
   }
-
 }
-console.log(removeBadIngredients(['peaches', 'orange juice', 'tuna fish', 'banana'], 'tuna fish'));
+
+
+Object.assign(Sloth.prototype, sleepMixin);
+  
+// instances
+let coolSloth = new Sloth();
+let coolerSloth = new Sloth();
+
+
+//testing
+console.log("The cool sloth counts " + coolSloth.countSheep() + " to go " + coolSloth.sleep());
+//console.log(coolSloth.countSheep());
+console.log(coolerSloth.sleep());
+console.log(coolerSloth.countSheep());
 
 trackProgress('1.2');
 
-/*
-1.3
-Some of our smoothies have peanut butter in them, but we want to substitute in avocado for folks with nut allergies!
-
-Write a function called makeAllergyFriendlySmoothie, that takes in an ingredients list a boolean called hasNutAllergy
-If the ingredients contain peanut butter and the person has a nut allergy, replace peanut butter with avocado.
-
-Testing:
-- input: (['kiwi', 'apple juice', 'blackberries'], true) => expected output: ["kiwi", "apple juice", "blackberries"]
-- input: (['kiwi', 'apple juice', 'peanut butter', 'blackberries'], false) => expected output: ["kiwi", "apple juice", "peanut butter", "blackberries"]
-- input: (['kiwi', 'apple juice', 'peanut butter', 'blackberries'], true) => expected output: ["kiwi", "apple juice", "avocado", "blackberries"]
-*/
-
-function makeAllergyFriendlySmoothie (ingredients, hasNutAllergy){
-  if (ingredients.includes('peanut butter') && hasNutAllergy {
-            const index = ingredients.indexOf('peanut butter');
-        ingredients.splice(index, 1, 'avocado');
-
-    
-    
-  }
-  
-}
-
-function makeAllergyFriendlySmoothie(ingredients, hasNutAllergy) {
-    if (ingredients.includes('peanut butter') && hasNutAllergy) {
-        const index = ingredients.indexOf('peanut butter');
-        ingredients.splice(index, 1, 'avocado');
-    }
-  console.log(ingredients);
-  return ingredients;
-
-  
-// trackProgress('1.3');
-
-/*
-1.4
-Uh-oh, we ran out of pineapple! Luckily, combining mango and passionfruit works as a decent substitute.
-
-Using the pineappleSubstitute array and the spread operator, write a function called substitutePineapple that takes in an ingredient list and replaces pineapple if it's present.
-
-Testing:
-- input: (['orange juice', 'pineapple', 'strawberries']) => expected output: ['orange juice', 'mango', 'passionfruit', 'strawberries']
-- input: (['orange juice', 'bananas', 'strawberries']) => expected output: ['orange juice', 'bananas', 'strawberries']
-
-*/
-
-const pineappleSubstitute = ['mango', 'passionfruit'];
-
-
-  const pineappleSubstitute = ['mango', 'passionfruit'];
-function substitutePineapple(ingredient) {
-  if (ingredient.includes('pineapple')) {
-    const index = ingredient.indexOf('pineapple');
-    ingredient.splice(index, 1, pineappleSubstitute[0]+pineappleSubstitute[1])
-  }
-  console.log(ingredient);
-  return ingredient;
-}
-// trackProgress('1.4');
-
 /* ______________________ PART 2 ______________________
-Iterating over Arrays
+Closure
 */
 
 /*
 2.1
-Uh-oh, several bad ingredients made it into the smoothies!! Can you remove them ALL?
-
-Given a list of smoothie ingredients, remove any of the bad ingredients that appear anywhere in the smoothie (there might be several!)
+We're trying to make a clownfish named Nemo, but the name is getting overridden to 'Flipper'! Let's lock it down and prevent our fish from mutating after they're created.
+- Log clownfish.getName() and clownfish.getLocation() and explain to your teammates why it is that.
+- Change the scope of the name and location properties to ensure they're only accessible through the "getter" functions
+- You can leave the Flipper and Bayou overrides to show that they don't impact the real properties
 
 Testing:
-- input: (['peaches', 'yogurt', 'cheez whiz', 'blackberries']) => expected output: ['peaches', 'yogurt', 'blackberries']
-- input: (['cherries', 'ranch dressing', 'orange juice', 'caviar', 'bananas']) => expected output: ['cherries', 'orange juice', 'bananas']
-- input: (['mango', 'orange juice', 'pineapple', 'yogurt']) => expected output: ['mango', 'orange juice', 'pineapple', 'yogurt']
+- assert that (clownfish.getName()) evaluates to ('Nemo')
+- assert that (clownfish.getLocation()) evaluates to ('Ocean')
 */
 
-const badIngredients = ['tuna fish', 'caviar', 'cheez whiz', 'ranch dressing']
+function Fish(name, location) {
+  let nameProp = name;
+  let locationProp = location;
+  this.getName = function () {
+    return nameProp;
+  };
+  this.getLocation = function () {
+    return locationProp;
+  };
+}
 
+let clownfish = new Fish('Nemo', 'ocean');
+clownfish.nameProp = 'Flipper';
+clownfish.locationProp = 'bayou';
 
-// trackProgress('2.1');
+console.log(clownfish.getName());
+console.log(clownfish.getLocation());
+
+trackProgress('2.1');
 
 /*
 2.2
-We're going vegan! We're updating all of our smoothies to be dairy free, replacing any dairy ingredients with oat milk.
-
-Create a function that takes in a list of ingredients and replaces any that match the dairy ingredient list (you can assume that no smoothie will have more than one dairy ingredient)
+Let's protect our cows!
+- Change the scope of the property fields to ensure they can't be changed outside of the constructor
+- Add "getter" methods for the properties
 
 Testing:
-- input: (['strawberries', 'whole milk', 'banana']) => expected output: ['strawberries', 'oat milk', 'banana']
+- assert that (coolCow.getName()) evaluates to ('Bessy')
+- assert that (coolCow.getMilkType()) evaluates to ('chocolate')
 */
 
-const dairyIngredients = ['yogurt', 'whole milk', 'ice cream'];
+function Cow(name, milkType) {
+  let nameProp = name;
+  let milkTypeProp = milkType;
+  this.getName = function() {
+    return nameProp
+  }
+  this.getMilkType = function() {
+    return milkTypeProp
+  }
+}
 
-// trackProgress('2.2');
+let coolCow = new Cow('Bessy', 'chocolate');
+
+console.log(coolCow.getName());
+console.log(coolCow.getMilkType());
+
+trackProgress('2.2');
+
+/* ______________________ PART 3 ______________________
+Immediately Invoked Function Expression (IIFE)
+*/
 
 /*
-2.3
-Building on the last problem, we want to be able to make multiple smoothies vegan at a time.
-
-Given a list of smoothies, replace the dairy in each one
-
-Note:
-- You can and should use the function you created above! This is good practice for creating small helper functions.
+3.1
+Let's practice IIFE!
+- Rewrite the eat function below as an IIFE
 
 Testing:
-- input: ([['mango', 'kiwi', 'pineapple'], ['strawberries', 'whole milk', 'banana'], ['chocolate', 'honey', 'yogurt', 'protein powder']]) 
-     => expected output: [['mango', 'kiwi', 'pineapple'], ['strawberries', 'oat milk', 'banana'], ['chocolate', 'honey', 'oat milk', 'protein powder']]
+- assert that (<running the code>) logs ("yum, yum, yum")
 */
 
-// trackProgress('2.3');
+
+(function eat() {
+  console.log("yum, yum, yum");
+}) ();
+
+
+trackProgress('3.1');
+
+/*
+3.2
+Write a IIFE for heckling that just logs "booooooo!"
+
+Testing:
+- assert that (<running the code>) logs ("booooooo!")
+*/
+
+(function boo() {
+  console.log("boooooo");
+}) ();
+
+trackProgress('3.2');
 
 /* ______________________ STOP HERE ______________________
 Below this is a bunch of stuff you don't need to worry about yet!
 */
-function isDefined(variableName) {
-  try {
-    eval(variableName);
-    return true;
-  } catch (e) {
-    if (e.name == 'ReferenceError') {
-      return false;
-    }
-  }
-}
-
-function equals(actualValue, expectedValue) {
-  if (Array.isArray(expectedValue)) {
-    return JSON.stringify(expectedValue) === JSON.stringify(actualValue);
-  }
-  return actualValue == expectedValue;
-}
-
-function assertEquals(actualValue, expectedValue) {
-  if (!equals(actualValue, expectedValue)) {
-    throw new Error('Expected: ' + expectedValue + ', but got: ' + actualValue);
-  }
-}
-
-function variableEqualsValue(variableName, expectedValue) {
-  if (isDefined(variableName) && equals(eval(variableName), expectedValue)) {
-    return true;
-  }
-  return false;
-}
-
-function checkVariable(variableName, expectedValue) {
-  var variableValue = eval(variableName);
-  if (!variableEqualsValue(variableName, expectedValue)) {
-    throw new Error(
-      'Expected ' +
-      variableName +
-      ' to be: ' +
-      expectedValue +
-      ' but was: ' +
-      variableValue
-    );
-  }
-  console.log(variableName + ' equals: ' + variableValue);
-}
-
-function isInitializedVariable(variableName) {
-  var variableValue = eval(variableName);
-
-  if (!isDefined(variableName) || variableValue == null) {
-    throw new Error('Expected ' + variableName + ' to be initialized.');
-  }
-  console.log(variableName + ' equals: ' + variableValue);
-}
-
-function isUninitializedVariable(variableName) {
-  if (!variableEqualsValue(variableName, null)) {
-    throw new Error(
-      'Expected ' + variableName + ' to be declared but uninitialized.'
-    );
-  }
-  console.log(variableName + ' equals: ' + eval(variableName));
-}
 
 function trackProgress(exercise) {
   console.log(
     '❓ Done with exercise ' + exercise + '! Check your own work!❓\n\n'
   );
-}
-
-function checkAnswer(exercise) {
-  switch (exercise) {
-    case '1.1':
-      checkVariable('', '');
-      break;
-    case '1.2':
-      checkVariable('', '');
-      break;
-    case '1.3':
-      checkVariable('', '');
-      break;
-    case '1.4':
-      checkVariable('', '');
-      break;
-    case '1.5':
-      checkVariable('', '');
-      break;
-    case '1.6':
-      checkVariable('', '');
-      break;
-    case '1.7':
-      checkVariable('', '');
-      break;
-    case '1.8':
-      checkVariable('', '');
-      break;
-    case '2.1':
-      checkVariable('', '');
-      break;
-    case '2.2':
-      checkVariable('', '');
-      break;
-    case '2.3':
-      checkVariable('', '');
-      break;
-    case '2.4':
-      checkVariable('', '');
-      break;
-    case '2.5':
-      checkVariable('', '');
-      break;
-    case '2.6':
-      checkVariable('', '');
-      break;
-    case '2.7':
-      checkVariable('', '');
-      break;
-    case '2.8':
-      checkVariable('', '');
-      break;
-    case '3.1':
-      checkVariable('', '');
-      break;
-    case '3.2':
-      checkVariable('', '');
-      break;
-    case '3.3':
-      checkVariable('', '');
-      break;
-    case '3.4':
-      checkVariable('', '');
-      break;
-    case '3.5':
-      checkVariable('', '');
-      break;
-    case '3.6':
-      checkVariable('', '');
-      break;
-    case '3.7':
-      checkVariable('', '');
-      break;
-    case '3.8':
-      checkVariable('', '');
-      break;
-    case '4.1':
-      checkVariable('', '');
-      break;
-    case '4.2':
-      checkVariable('', '');
-      break;
-    case '4.3':
-      checkVariable('', '');
-      break;
-    case '4.4':
-      checkVariable('', '');
-      break;
-    case '4.5':
-      checkVariable('', '');
-      break;
-    case '4.6':
-      checkVariable('', '');
-      break;
-    case '4.7':
-      checkVariable('', '');
-      break;
-    case '4.8':
-      checkVariable('', '');
-      break;
-    default:
-      throw new Error(exercise + ' does not have an answer key.');
-  }
-  console.log('✅ Passed exercise ' + exercise + '! ✅\n\n');
 }
